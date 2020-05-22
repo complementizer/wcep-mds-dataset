@@ -7,6 +7,7 @@ import multiprocessing
 import newspaper
 import sys
 import time
+import utils
 from warcio.archiveiterator import ArchiveIterator
 
 
@@ -45,23 +46,14 @@ def download_cc_file(cc_path, local_cc_path):
         time.sleep(5)
 
 
-def read_lines(path):
-    with open(path) as f:
-        for line in f:
-            yield line.strip()
-
-
-def read_jsonl(path):
-    with open(path) as f:
-        for line in f:
-            yield json.loads(line)
-
-
-def read_article_ids(path):
+def read_article_ids(path, max_cluster_size):
     id_to_collection = {}
     ids = set()
-    for cluster in read_jsonl(path):
-        for a in cluster['cc_articles']:
+    for cluster in utils.read_jsonl(path):
+        articles = cluster['cc_articles']
+        if max_cluster_size != -1:
+            articles = articles[:max_cluster_size]
+        for a in articles:
             ids.add(a['id'])
             id_to_collection[a['id']] = cluster['collection']
     return ids, id_to_collection
@@ -106,16 +98,10 @@ def process_batch(items, out_path, jobs):
     except KeyboardInterrupt:
         pool.terminate()
         sys.exit()
-    write_jsonl(articles, out_path, mode='a')
+    utils.write_jsonl(articles, out_path, mode='a')
     new_record_ids = [x['id'] for x in items]
     logging.info(f'done-record-ids:{" ".join(new_record_ids)}')
     return articles
-
-
-def write_jsonl(items, path, mode='a'):
-    lines = [json.dumps(x) for x in items]
-    with open(path, mode) as f:
-        f.write('\n'.join(lines) + '\n')
 
 
 def parse_logged_record_ids(line):
@@ -175,8 +161,9 @@ def main(args):
     else:
         done_cc_files, done_record_ids = set(), set()
 
-    cc_files = list(read_lines(cc_files_path))
-    todo_record_ids, id_to_collection = read_article_ids(args.dataset)
+    cc_files = list(utils.read_lines(cc_files_path))
+    todo_record_ids, id_to_collection = read_article_ids(
+        args.dataset, args.max_cluster_size)
     n_files = len(cc_files)
 
     for i, cc_file in enumerate(cc_files):
@@ -223,6 +210,7 @@ if __name__ == '__main__':
     parser.add_argument('--dataset', required=True)
     parser.add_argument('--storage', required=True)
     parser.add_argument('--override', action='store_true')
+    parser.add_argument('--max-cluster-size', type=int, default=-1)
     parser.add_argument('--batchsize', type=int, default=1000)
     parser.add_argument('--jobs', type=int, default=4)
     main(parser.parse_args())

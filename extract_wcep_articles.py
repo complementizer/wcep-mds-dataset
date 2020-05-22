@@ -6,6 +6,7 @@ import random
 import newspaper
 import json
 import numpy as np
+import utils
 
 
 def extract_article(todo_article):
@@ -42,16 +43,10 @@ def extract_article(todo_article):
     return article
 
 
-def write_jsonl(items, path, mode='a'):
-    lines = [json.dumps(x) for x in items]
-    with open(path, mode) as f:
-        f.write('\n'.join(lines) + '\n')
-
-
 def batches(iterable, n=1):
     l = len(iterable)
-    for ndx in range(0, l, n):
-        yield iterable[ndx:min(ndx + n, l)]
+    for i in range(0, l, n):
+        yield iterable[i:min(i + n, l)]
 
 
 def read_input(path):
@@ -128,7 +123,7 @@ def main(args):
         t1 = t2
 
         print(f'{n_done}/{n_total} done, {n_success}/{n_done} successful')
-        print('TIME (seconds):')
+        print('Average per-batch time (seconds):')
         print('last batch:', elapsed)
         print('last 10:', np.mean(durations[-10:]))
         print('overall:', np.mean(durations))
