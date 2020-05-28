@@ -35,12 +35,25 @@ def add_cc_articles_to_clusters(clusters, cc_path, id_to_cluster_idx, tmp_cluste
             print(f'{i} cc articles done, {n_clusters_done}/{n_clusters} clusters done')
         cluster_idx = id_to_cluster_idx[a['id']]
         c = clusters[cluster_idx]
-        c.setdefault('cc_articles_filled', [])
-        c['cc_articles_filled'].append(a)
-        if len(c['cc_articles']) == len(c['cc_articles_filled']):
+
+        if c is not None:
+            c['cc_articles_filled'].append(a)
+            c['cc_ids_filled'].add(a['id'])
+            if c['cc_ids'] == c['cc_ids_filled']:
+                del c['cc_ids'], c['cc_ids_filled']
+                utils.write_jsonl([c], tmp_clusters_path, mode='a')
+                clusters[cluster_idx] = None
+                n_clusters_done += 1
+
+    # remaining few clusters that only have WCEP but not CC articles
+    for c in clusters:
+        if c is not None and c['cc_ids'] == c['cc_ids_filled']:
+            print("Hmm")
+            del c['cc_ids'], c['cc_ids_filled']
             utils.write_jsonl([c], tmp_clusters_path, mode='a')
             clusters[cluster_idx] = None
             n_clusters_done += 1
+
     print(f'{i} cc articles done, {n_clusters_done}/{n_clusters} clusters done')
 
 
@@ -95,6 +108,15 @@ def main(args):
 
     # get article -> cluster mappings
     clusters = list(utils.read_jsonl(args.dataset))
+    for c in clusters:
+        if args.max_cluster_size != -1:
+            l = args.max_cluster_size - len(c['wcep_articles'])
+            c['cc_articles'] = c['cc_articles'][:l]
+
+        c['cc_ids'] = set([a['id'] for a in c['cc_articles']])
+        c['cc_ids_filled'] = set()
+        c['cc_articles_filled'] = []
+
     url_to_cluster_idxs, id_to_cluster_idx = get_article_to_cluster_mappings(
         clusters
     )
@@ -123,5 +145,6 @@ if __name__ == '__main__':
     parser.add_argument('--dataset', required=True)
     parser.add_argument('--wcep-articles', required=True)
     parser.add_argument('--cc-articles', required=True)
+    parser.add_argument('--max-cluster-size', type=int, default=-1)
     parser.add_argument('--o', required=True)
     main(parser.parse_args())
