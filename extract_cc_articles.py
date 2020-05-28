@@ -52,7 +52,8 @@ def read_article_ids(path, max_cluster_size):
     for cluster in utils.read_jsonl(path):
         articles = cluster['cc_articles']
         if max_cluster_size != -1:
-            articles = articles[:max_cluster_size]
+            l = max_cluster_size - len(cluster['wcep_articles'])
+            articles = articles[:l]
         for a in articles:
             ids.add(a['id'])
             id_to_collection[a['id']] = cluster['collection']
