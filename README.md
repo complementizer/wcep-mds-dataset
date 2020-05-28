@@ -56,3 +56,19 @@ c = val_data[404]
 summary = c['summary'] # human-written summary
 articles = c['articles'] # cluster of articles
 ```
+
+### Citation 
+
+If you find this dataset useful, please cite: 
+```
+@article{ghalandari2020WCEP,
+    title = {A Large-Scale Multi-Document Summarization Dataset 
+             from the Wikipedia Current Events Portal},
+    author = {Demian Gholipour Ghalandari and Chris Hokamp and Nghia The Pham 
+              and John Glover and Georgiana Ifrim},
+    journal={arXiv preprint arXiv:2005.10070},
+    year = {2020},
+}
+
+```
+
