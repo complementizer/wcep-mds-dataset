@@ -4,7 +4,7 @@ The WCEP dataset for multi-document summarization (MDS)  consists of short, huma
 ### Dataset Generation
 We currently do not provide the entire dataset for download. Instead, we share the summaries from WCEP and scripts that obtain the associated news articles. Make sure to set `--jobs` to your avaible number of CPUs to speed things up. Both scripts can be interrupted and resumed by just repeating the same command. To restart from scratch, add `--override`.
 
-At first, download the inital [dataset without articles](https://drive.google.com/file/d/1LGYFKGzCgvdllwIQHDF5qSxtan1Y0Re9/view?usp=sharing "dataset without articles") and place it in `/data`.
+At first, download the inital [dataset without articles](https://drive.google.com/file/d/1LGYFKGzCgvdllwIQHDF5qSxtan1Y0Re9/view?usp=sharing "dataset without articles"), place it in `/data` (unzipped).
 ##### 1) Extracting articles from WCEP
 This script extracts news articles from various news sources cited on WCEP using [newspaper3k](https://github.com/codelucas/newspaper "newspaper3k") from the [Internet Archive Wayback Machine](https://archive.org/). We previously requested snapshots of all source articles that were not archived yet.
 
@@ -31,13 +31,14 @@ python extract_cc_articles.py \
 This process takes a long time (few days!). We are working on speeding it up.
 `--max-cluster-size 100` already reduces the time: only up to 100 articles of each cluster in the dataset are extracted. This corresponds to the dataset version used in the experiments in our paper ("WCEP-100").
 ##### 3) Combine and split
-Finally, we need to group articles and summaries belonging together, and split the dataset into separate train/validation/test files.
+Finally, we need to group articles and summaries belonging together, and split the dataset into separate train/validation/test files. If `--max-cluster-size` was used in the previous step, use that here accordingly.
 ```bash
 python combine_and_split.py \
     --dataset data/initial_dataset.jsonl \
     --cc-articles data/cc_storage/cc_articles.jsonl \
     --wcep-articles data/wcep_articles.jsonl \
-    --o data/wcep_dataset
+    --max-cluster-size 100 \
+    --o data/wcep_dataset    
 ```
 
 ### Loading the dataset
@@ -57,18 +58,17 @@ summary = c['summary'] # human-written summary
 articles = c['articles'] # cluster of articles
 ```
 
-### Citation 
+### Citation
 
-If you find this dataset useful, please cite: 
+If you find this dataset useful, please cite:
 ```
 @article{ghalandari2020WCEP,
-    title = {A Large-Scale Multi-Document Summarization Dataset 
+    title = {A Large-Scale Multi-Document Summarization Dataset
              from the Wikipedia Current Events Portal},
-    author = {Demian Gholipour Ghalandari and Chris Hokamp and Nghia The Pham 
+    author = {Demian Gholipour Ghalandari and Chris Hokamp and Nghia The Pham
               and John Glover and Georgiana Ifrim},
     journal={arXiv preprint arXiv:2005.10070},
     year = {2020},
 }
 
 ```
-
