@@ -115,7 +115,7 @@ def main(args):
             n_done += 1
 
         if articles:
-            write_jsonl(articles, outpath, mode='a')
+            utils.write_jsonl(articles, outpath, mode='a')
 
         t2 = time.time()
         elapsed = t2 - t1
