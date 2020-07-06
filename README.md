@@ -1,6 +1,14 @@
 ## WCEP Dataset
 ### Overview
-The WCEP dataset for multi-document summarization (MDS)  consists of short, human-written summaries about news events, obtained from the [Wikipedia Current Events Portal](https://en.wikipedia.org/wiki/Portal:Current_events "Wikipedia Current Events Portal") (WCEP), each paired with a cluster of news articles associated with an event. These articles consist of sources cited by editors on WCEP, and are extended with articles automatically obtained from the [Common Crawl News dataset](https://commoncrawl.org/2016/10/news-dataset-available/ "CommonCrawl News dataset"). Check out our ACL 2020 paper [A Large-Scale Multi-Document Summarization Dataset from the Wikipedia Current Events Portal](https://arxiv.org/abs/2005.10070) for more info about the dataset and experiments.
+The WCEP dataset for multi-document summarization (MDS)  consists of short, human-written summaries about news events, obtained from the [Wikipedia Current Events Portal](https://en.wikipedia.org/wiki/Portal:Current_events "Wikipedia Current Events Portal") (WCEP), each paired with a cluster of news articles associated with an event. These articles consist of sources cited by editors on WCEP, and are extended with articles automatically obtained from the [Common Crawl News dataset](https://commoncrawl.org/2016/10/news-dataset-available/ "CommonCrawl News dataset"). For more information about the dataset and experiments, check out our ACL 2020 paper: *A Large-Scale Multi-Document Summarization Dataset from the Wikipedia Current Events Portal*:
+* [Paper in ACL](https://www.aclweb.org/anthology/2020.acl-main.120/)
+* [Paper (PDF)](acl20-paper.pdf)
+* [Slides (PDF)](acl20-slides.pdf)
+
+[A Large-Scale Multi-Document Summarization Dataset from the Wikipedia Current Events Portal](https://arxiv.org/abs/2005.10070) for more info about the dataset and experiments.
+
+* Paper: A Large-Scale Multi-Document Summarization Dataset from the Wikipedia Current Events Portal
+* Slides
 ### Dataset Generation
 We currently do not provide the entire dataset for download. Instead, we share the summaries from WCEP and scripts that obtain the associated news articles. Make sure to set `--jobs` to your avaible number of CPUs to speed things up. Both scripts can be interrupted and resumed by just repeating the same command. To restart from scratch, add `--override`.
 
@@ -62,13 +70,19 @@ articles = c['articles'] # cluster of articles
 
 If you find this dataset useful, please cite:
 ```
-@article{ghalandari2020WCEP,
-    title = {A Large-Scale Multi-Document Summarization Dataset
-             from the Wikipedia Current Events Portal},
-    author = {Demian Gholipour Ghalandari and Chris Hokamp and Nghia The Pham
-              and John Glover and Georgiana Ifrim},
-    journal={arXiv preprint arXiv:2005.10070},
-    year = {2020},
+@inproceedings{gholipour-ghalandari-etal-2020-large,
+    title = "A Large-Scale Multi-Document Summarization Dataset from the {W}ikipedia Current Events Portal",
+    author = "Gholipour Ghalandari, Demian  and
+      Hokamp, Chris  and
+      Pham, Nghia The  and
+      Glover, John  and
+      Ifrim, Georgiana",
+    booktitle = "Proceedings of the 58th Annual Meeting of the Association for Computational Linguistics",
+    month = jul,
+    year = "2020",
+    address = "Online",
+    publisher = "Association for Computational Linguistics",
+    url = "https://www.aclweb.org/anthology/2020.acl-main.120",
+    pages = "1302--1308",
 }
-
 ```
