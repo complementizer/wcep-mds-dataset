@@ -7,7 +7,7 @@ The WCEP dataset for multi-document summarization (MDS)  consists of short, huma
 
 ### Dataset Generation
 
-Update 6.10.20: [an extracted version of the dataset can be downloaded here](https://drive.google.com/drive/folders/1PJufMEOdogIaKQq-PlB4vvawLa6tvEG6?usp=sharing)
+Update 6.10.20: [an extracted version of the dataset can be downloaded here](https://drive.google.com/drive/folders/1T5wDxu4ajFwEq77dG88oE95e8ppREamg?usp=sharing)
 
 We currently do not provide the entire dataset for download. Instead, we share the summaries from WCEP and scripts that obtain the associated news articles. Make sure to set `--jobs` to your avaible number of CPUs to speed things up. Both scripts can be interrupted and resumed by just repeating the same command. To restart from scratch, add `--override`.
 
