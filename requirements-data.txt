@@ -1,2 +1,0 @@
-warcio==1.7.1
-newspaper3k==0.2.8
