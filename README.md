@@ -5,7 +5,7 @@ The WCEP dataset for multi-document summarization (MDS)  consists of short, huma
 ### Colab Notebook
 
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/wcep-mds-dataset/blob/experiments/wcep_getting_started.ipynb)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/complementizer/wcep-mds-dataset/blob/experiments/wcep_getting_started.ipynb)
 
 You can use this notebook to
 * download & inspect the dataset
