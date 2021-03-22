@@ -1,38 +1,48 @@
 ## WCEP Dataset
 ### Overview
-The WCEP dataset for multi-document summarization (MDS)  consists of short, human-written summaries about news events, obtained from the [Wikipedia Current Events Portal](https://en.wikipedia.org/wiki/Portal:Current_events "Wikipedia Current Events Portal") (WCEP), each paired with a cluster of news articles associated with an event. These articles consist of sources cited by editors on WCEP, and are extended with articles automatically obtained from the [Common Crawl News dataset](https://commoncrawl.org/2016/10/news-dataset-available/ "CommonCrawl News dataset"). For more information about the dataset and experiments, check out our ACL 2020 paper: *A Large-Scale Multi-Document Summarization Dataset from the Wikipedia Current Events Portal*:
-* [Paper in ACL](https://www.aclweb.org/anthology/2020.acl-main.120/)
-* [Paper (PDF)](acl20-paper.pdf)
-* [Slides (PDF)](acl20-slides.pdf)
+The WCEP dataset for multi-document summarization (MDS)  consists of short, human-written summaries about news events, obtained from the [Wikipedia Current Events Portal](https://en.wikipedia.org/wiki/Portal:Current_events "Wikipedia Current Events Portal") (WCEP), each paired with a cluster of news articles associated with an event. These articles consist of sources cited by editors on WCEP, and are extended with articles automatically obtained from the [Common Crawl News dataset](https://commoncrawl.org/2016/10/news-dataset-available/ "CommonCrawl News dataset"). For more information about the dataset and experiments, check out our ACL 2020 paper: *A Large-Scale Multi-Document Summarization Dataset from the Wikipedia Current Events Portal.* ([Paper](https://www.aclweb.org/anthology/2020.acl-main.120/),  [Slides](acl20-slides.pdf))
+
+### Colab Notebook
+
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/wcep-mds-dataset/blob/experiments/wcep_getting_started.ipynb)
+
+You can use this notebook to
+* download & inspect the dataset
+* run extractive baselines & oracles
+* evaluate summaries
+
+Otherwise, check out the instructions below.
 
 ### Download Dataset
 
 Update 6.10.20: [an extracted version of the dataset can be downloaded here](https://drive.google.com/drive/folders/1T5wDxu4ajFwEq77dG88oE95e8ppREamg?usp=sharing)
 
-### Loading the dataset
-We store the dataset in a jsonl format, where each line corresponds to a news event, associated with a summary and a cluster of news articles, and some metadata, such as date and category. The summarization task is to reconstruct the summary from the news articles.
+### Loading the Dataset
+We store the dataset in a gzipped jsonl format, where each line corresponds to a news event, associated with a summary and a cluster of news articles, and some metadata, such as date and category. The summarization task is to generate the summary from the news articles.
 
 ```python
-import json
+import json, gzip
 
-def read_jsonl(path):
-    with open(path) as f:
-        for line in f:
-            yield json.loads(line)
+def read_jsonl_gz(path):
+    with gzip.open(path) as f:
+        for l in f:
+            yield json.loads(l)
 
-val_data = list(read_jsonl('data/wcep_dataset/val.jsonl'))
+val_data = list(utils.read_jsonl_gz('<WCEP path>/val.jsonl.gz'))
 c = val_data[404]
 summary = c['summary'] # human-written summary
 articles = c['articles'] # cluster of articles
 ```
 
 ### Extractive Baselines and Evaluation
+
 We also provide code to run several extractive baselines and evaluate
 generated summaries. Note that we just use the ROUGE wrapper of the [newsroom library](https://github.com/lil-lab/newsroom) to compute ROUGE scores.
 
 Install dependencies:
 
-`pip install -r requirements-experiments.txt`
+`pip install -r experiments/requirements.txt`
 
 `cd` to [experiments](experiments) to run this snippet:
 
@@ -67,7 +77,7 @@ We currently do not provide the entire dataset for download. Instead, we share t
 
 Install dependencies:
 ```bash
-pip install requirements-data.txt
+pip install dataset_generation/requirements.txt
 ```
 
 At first, download the inital [dataset without articles](https://drive.google.com/file/d/1LGYFKGzCgvdllwIQHDF5qSxtan1Y0Re9/view?usp=sharing "dataset without articles"), place it in `/data` (unzipped).
