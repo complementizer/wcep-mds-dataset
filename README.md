@@ -9,9 +9,66 @@ The WCEP dataset for multi-document summarization (MDS)  consists of short, huma
 
 Update 6.10.20: [an extracted version of the dataset can be downloaded here](https://drive.google.com/drive/folders/1T5wDxu4ajFwEq77dG88oE95e8ppREamg?usp=sharing)
 
+### Loading the dataset
+We store the dataset in a jsonl format, where each line corresponds to a news event, associated with a summary and a cluster of news articles, and some metadata, such as date and category. The summarization task is to reconstruct the summary from the news articles.
+
+```python
+import json
+
+def read_jsonl(path):
+    with open(path) as f:
+        for line in f:
+            yield json.loads(line)
+
+val_data = list(read_jsonl('data/wcep_dataset/val.jsonl'))
+c = val_data[404]
+summary = c['summary'] # human-written summary
+articles = c['articles'] # cluster of articles
+```
+
+### Extractive Baselines and Evaluation
+We also provide code to run several extractive baselines and evaluate
+generated summaries. Note that we just use the ROUGE wrapper of the [newsroom library](https://github.com/lil-lab/newsroom) to compute ROUGE scores.
+
+Install dependencies:
+
+`pip install -r requirements-experiments.txt`
+
+`cd` to [experiments](experiments) to run this snippet:
+
+```python
+from utils import read_jsonl_gz
+from textrank import TextRankSummarizer
+from evaluate import evaluate
+from pprint import pprint
+
+val_data = list(read_jsonl_gz('<INSERT WCEP PATH>/val.jsonl.gz'))
+
+textrank = TextRankSummarizer()
+
+settings = {
+    'max_len': 40, 'len_type': 'words',
+    'in_titles': False, 'out_titles': False,
+    'min_sent_tokens': 7, 'max_sent_tokens': 60,    
+}
+
+inputs = [c['articles'][:10] for c in val_data[:10]]
+ref_summaries = [c['summary'] for c in val_data[:10]]
+pred_summaries = [textrank.summarize(articles, **settings) for articles in inputs]
+results = evaluate(ref_summaries, pred_summaries)
+pprint(results)
+```
+
 ### Dataset Generation
 
+**Note:** This is currently not required as the dataset is available for download.
+
 We currently do not provide the entire dataset for download. Instead, we share the summaries from WCEP and scripts that obtain the associated news articles. Make sure to set `--jobs` to your avaible number of CPUs to speed things up. Both scripts can be interrupted and resumed by just repeating the same command. To restart from scratch, add `--override`.
+
+Install dependencies:
+```bash
+pip install requirements-data.txt
+```
 
 At first, download the inital [dataset without articles](https://drive.google.com/file/d/1LGYFKGzCgvdllwIQHDF5qSxtan1Y0Re9/view?usp=sharing "dataset without articles"), place it in `/data` (unzipped).
 ##### 1) Extracting articles from WCEP
@@ -48,23 +105,6 @@ python combine_and_split.py \
     --wcep-articles data/wcep_articles.jsonl \
     --max-cluster-size 100 \
     --o data/wcep_dataset    
-```
-
-### Loading the dataset
-We store the dataset in a jsonl format, where each line corresponds to a news event, associated with a summary and a cluster of news articles, and some metadata, such as date and category. The summarization task is to reconstruct the summary from the news articles.
-
-```python
-import json
-
-def read_jsonl(path):
-    with open(path) as f:
-        for line in f:
-            yield json.loads(line)
-
-val_data = list(read_jsonl('data/wcep_dataset/val.jsonl'))
-c = val_data[404]
-summary = c['summary'] # human-written summary
-articles = c['articles'] # cluster of articles
 ```
 
 ### Citation

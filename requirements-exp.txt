@@ -1,0 +1,2 @@
+nltk
+git+git://github.com/clic-lab/newsroom.git#egg=newsroom
