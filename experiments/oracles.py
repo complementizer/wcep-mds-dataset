@@ -56,12 +56,13 @@ class Oracle():
     def summarize(self,
                   ref,
                   articles,
-                  max_len,
-                  len_type,
-                  in_titles,
-                  out_titles,
-                  min_sent_tokens,
-                  max_sent_tokens):
+                  max_len=40,
+                  len_type='words',
+                  in_titles=False,
+                  out_titles=False,
+                  min_sent_tokens=7,
+                  max_sent_tokens=40):
+
         articles = self.summarizer._preprocess(articles)
         sents = [s for a in articles for s in a.sents]
         sents = self.summarizer._deduplicate(sents)
@@ -127,12 +128,13 @@ class SingleOracle():
     def summarize(self,
                   ref,
                   articles,
-                  max_len,
-                  len_type,
-                  in_titles,
-                  out_titles,
-                  min_sent_tokens,
-                  max_sent_tokens):
+                  max_len=40,
+                  len_type='words',
+                  in_titles=False,
+                  out_titles=False,
+                  min_sent_tokens=7,
+                  max_sent_tokens=40):
+
         scored_oracles = []
         for a in articles:
             summary = self.oracle.summarize(
@@ -160,12 +162,12 @@ class LeadOracle():
     def summarize(self,
                   ref,
                   articles,
-                  max_len,
-                  len_type,
-                  in_titles,
-                  out_titles,
-                  min_sent_tokens,
-                  max_sent_tokens):
+                  max_len=40,
+                  len_type='words',
+                  in_titles=False,
+                  out_titles=False,
+                  min_sent_tokens=7,
+                  max_sent_tokens=40):
 
         articles = self.summarizer._preprocess(articles)
         scored_summaries = []

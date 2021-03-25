@@ -18,12 +18,12 @@ class RandomBaseline(Summarizer):
 
     def summarize(self,
                   articles,
-                  max_len,
-                  len_type,
-                  in_titles,
-                  out_titles,
-                  min_sent_tokens,
-                  max_sent_tokens):
+                  max_len=40,
+                  len_type='words',
+                  in_titles=False,
+                  out_titles=False,
+                  min_sent_tokens=7,
+                  max_sent_tokens=40):
 
         articles = self._preprocess(articles)
         sents = [s for a in articles for s in a.sents]
@@ -56,12 +56,12 @@ class RandomLead(Summarizer):
 
     def summarize(self,
                   articles,
-                  max_len,
-                  len_type,
-                  in_titles,
-                  out_titles,
-                  min_sent_tokens,
-                  max_sent_tokens):
+                  max_len=40,
+                  len_type='words',
+                  in_titles=False,
+                  out_titles=False,
+                  min_sent_tokens=7,
+                  max_sent_tokens=40):
 
         article_idxs = list(range(len(articles)))
         random.shuffle(article_idxs)
@@ -103,12 +103,12 @@ class TextRankSummarizer(Summarizer):
 
     def summarize(self,
                   articles,
-                  max_len,
-                  len_type,
-                  in_titles,
-                  out_titles,
-                  min_sent_tokens,
-                  max_sent_tokens):
+                  max_len=40,
+                  len_type='words',
+                  in_titles=False,
+                  out_titles=False,
+                  min_sent_tokens=7,
+                  max_sent_tokens=40):
 
         articles = self._preprocess(articles)
         sents = [s for a in articles for s in a.sents]
@@ -154,12 +154,12 @@ class CentroidSummarizer(Summarizer):
 
     def summarize(self,
                   articles,
-                  max_len,
-                  len_type,
-                  in_titles,
-                  out_titles,
-                  min_sent_tokens,
-                  max_sent_tokens):
+                  max_len=40,
+                  len_type='words',
+                  in_titles=False,
+                  out_titles=False,
+                  min_sent_tokens=7,
+                  max_sent_tokens=40):
 
         articles = self._preprocess(articles)
         sents = [s for a in articles for s in a.sents]
@@ -310,13 +310,13 @@ class SubmodularSummarizer(Summarizer):
 
     def summarize(self,
                   articles,
-                  max_len,
-                  len_type,
-                  in_titles,
-                  out_titles,
-                  min_sent_tokens,
-                  max_sent_tokens):
-
+                  max_len=40,
+                  len_type='words',
+                  in_titles=False,
+                  out_titles=False,
+                  min_sent_tokens=7,
+                  max_sent_tokens=40):
+                  
         articles = self._preprocess(articles)
         sents = [s for a in articles for s in a.sents]
         if in_titles == False:
