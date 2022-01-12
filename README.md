@@ -48,7 +48,7 @@ Install dependencies:
 
 ```python
 from utils import read_jsonl_gz
-from textrank import TextRankSummarizer
+from baselines import TextRankSummarizer
 from evaluate import evaluate
 from pprint import pprint
 
