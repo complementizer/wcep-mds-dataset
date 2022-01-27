@@ -1,5 +1,5 @@
-scikit-learn==0.23.1
+scikit-learn==1.0.2
 networkx==2.4
 nltk==3.5
-numpy>=1.18.5
+numpy==1.22.1
 rouge-score==0.0.4
