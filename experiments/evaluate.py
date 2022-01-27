@@ -2,7 +2,10 @@ import argparse
 import collections
 import numpy as np
 import utils
-from newsroom.analyze.rouge import ROUGE_L, ROUGE_N
+from rouge_score import rouge_scorer
+
+ROUGE_TYPES = ["rouge1", "rouge2", "rougeL"]
+rouge_scorer = rouge_scorer.RougeScorer(ROUGE_TYPES, use_stemmer=True)
 
 
 def print_mean(results, rouge_types):
@@ -17,10 +20,8 @@ def print_mean(results, rouge_types):
 
 
 def evaluate(ref_summaries, pred_summaries, lowercase=False):
-
-    rouge_types = ['rouge-1', 'rouge-2', 'rouge-l']
     results = dict((rouge_type, collections.defaultdict(list))
-                   for rouge_type in rouge_types)
+                   for rouge_type in ROUGE_TYPES)
 
     for ref, pred in zip(ref_summaries, pred_summaries):
 
@@ -28,17 +29,14 @@ def evaluate(ref_summaries, pred_summaries, lowercase=False):
             pred = pred.lower()
             ref = ref.lower()
 
-        r1 = ROUGE_N(ref, pred, n=1)
-        r2 = ROUGE_N(ref, pred, n=2)
-        rl = ROUGE_L(ref, pred)
-
-        for (rouge_type, scores) in zip(rouge_types, [r1, r2, rl]):
+        rouge_scores = rouge_scorer.score(ref, pred)
+        for rouge_type, scores in rouge_scores.items():
             results[rouge_type]['p'].append(scores.precision)
             results[rouge_type]['r'].append(scores.recall)
-            results[rouge_type]['f'].append(scores.fscore)
+            results[rouge_type]['f'].append(scores.fmeasure)
 
     mean_results = {}
-    for rouge_type in  rouge_types:
+    for rouge_type in  ROUGE_TYPES:
         precs = results[rouge_type]['p']
         recalls = results[rouge_type]['r']
         fscores = results[rouge_type]['f']
@@ -56,9 +54,8 @@ def evaluate_from_path(dataset_path, pred_path, start, stop, lowercase=False):
     dataset = utils.read_jsonl(dataset_path)
     predictions = utils.read_jsonl(pred_path)
 
-    rouge_types = ['rouge-1', 'rouge-2', 'rouge-l']
     results = dict((rouge_type, collections.defaultdict(list))
-                   for rouge_type in rouge_types)
+                   for rouge_type in ROUGE_TYPES)
 
     for i, cluster in enumerate(dataset):
         if start > -1 and i < start:
@@ -76,21 +73,17 @@ def evaluate_from_path(dataset_path, pred_path, start, stop, lowercase=False):
             hyp = hyp.lower()
             ref = ref.lower()
 
-        r1 = ROUGE_N(ref, hyp, n=1)
-        r2 = ROUGE_N(ref, hyp, n=2)
-        rl = ROUGE_L(ref, hyp)
-
-        for (rouge_type, scores) in zip(rouge_types, [r1, r2, rl]):
+        rouge_scores = rouge_scorer.score(ref, pred)
+        for rouge_type, scores in rouge_scores.items():
             results[rouge_type]['p'].append(scores.precision)
             results[rouge_type]['r'].append(scores.recall)
-            results[rouge_type]['f'].append(scores.fscore)
+            results[rouge_type]['f'].append(scores.fmeasure)
 
         if i % 100 == 0:
-            print(i)
-            # print_mean(results, rouge_types)
+            print(i)            
 
     print('Final Average:')
-    print_mean(results, rouge_types)
+    print_mean(results, ROUGE_TYPES)
     return results
 
 

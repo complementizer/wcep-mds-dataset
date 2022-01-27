@@ -2,4 +2,4 @@ scikit-learn==0.23.1
 networkx==2.4
 nltk==3.5
 numpy>=1.18.5
-git+git://github.com/clic-lab/newsroom.git#egg=newsroom
+rouge-score==0.0.4

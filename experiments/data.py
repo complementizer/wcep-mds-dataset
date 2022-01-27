@@ -1,5 +1,7 @@
 import string
-from spacy.lang.en import STOP_WORDS
+from nltk.corpus import stopwords
+
+STOP_WORDS = set(stopwords.words('english'))
 STOP_WORDS |= set(string.punctuation)
 
 
