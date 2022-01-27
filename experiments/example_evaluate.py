@@ -6,8 +6,6 @@ import nltk
 
 
 def main():
-    nltk.download("punkt", quiet=True)
-    
     # download WCEP dataset beforehand
     val_data = list(read_jsonl_gz('WCEP/val.jsonl.gz'))
 

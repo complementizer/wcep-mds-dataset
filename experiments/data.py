@@ -1,4 +1,9 @@
 import string
+import nltk
+
+nltk.download("punkt", quiet=True)
+nltk.download("stopwords", quiet=True)
+
 from nltk.corpus import stopwords
 
 STOP_WORDS = set(stopwords.words('english'))

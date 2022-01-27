@@ -6,8 +6,6 @@ import nltk
 
 
 def main():
-    nltk.download("punkt", quiet=True)
-
     # download WCEP dataset beforehand
     val_data = list(read_jsonl_gz('WCEP/val.jsonl.gz'))
 
@@ -19,10 +17,10 @@ def main():
         'min_sent_tokens': 7, 'max_sent_tokens': 60,
     }
 
-    for c in val_data[:5]:
+    for c in val_data[:20]:
         print("ARTICLE HEADLINES:")
-        articles = c["articles"][:10]
-        for a in articles:
+        articles = c["articles"][:20]
+        for a in articles[:5]:
             print(a["title"])
         summary = textrank.summarize(articles, **settings)
         print()
