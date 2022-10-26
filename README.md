@@ -29,7 +29,7 @@ def read_jsonl_gz(path):
         for l in f:
             yield json.loads(l)
 
-val_data = list(utils.read_jsonl_gz('<WCEP path>/val.jsonl.gz'))
+val_data = list(read_jsonl_gz('<WCEP path>/val.jsonl.gz'))
 c = val_data[404]
 summary = c['summary'] # human-written summary
 articles = c['articles'] # cluster of articles
